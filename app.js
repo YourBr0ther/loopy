@@ -320,6 +320,10 @@ class LoopDeck {
         const clearBtn = document.querySelector(`.clear-btn[data-frame="${frameIndex}"]`);
 
         if (frame.blob) {
+            // Revoke old blob URL to prevent memory leak
+            if (video.src && video.src.startsWith('blob:')) {
+                URL.revokeObjectURL(video.src);
+            }
             video.src = URL.createObjectURL(frame.blob);
             placeholder.style.display = 'none';
             status.classList.add('has-video');
@@ -327,6 +331,10 @@ class LoopDeck {
             stopBtn.disabled = false;
             clearBtn.disabled = false;
         } else {
+            // Revoke blob URL when clearing
+            if (video.src && video.src.startsWith('blob:')) {
+                URL.revokeObjectURL(video.src);
+            }
             video.src = '';
             placeholder.style.display = 'flex';
             status.classList.remove('has-video');
