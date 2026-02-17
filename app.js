@@ -286,6 +286,13 @@ class LoopDeck {
 
         this.mediaRecorder.onstop = () => {
             const blob = new Blob(chunks, { type: selectedMimeType || 'video/webm' });
+
+            // Revoke old blob URL before assigning new blob to prevent memory leak
+            const video = document.getElementById(`frame-video-${frameIndex}`);
+            if (video.src && video.src.startsWith('blob:')) {
+                URL.revokeObjectURL(video.src);
+            }
+
             this.frames[frameIndex].blob = blob;
             this.updateFrameUI(frameIndex);
             this.recordingFrameIndex = null;
