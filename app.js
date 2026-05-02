@@ -293,6 +293,14 @@ class LoopDeck {
                 URL.revokeObjectURL(video.src);
             }
 
+            // Revoke old blob URL if it exists
+            if (this.frames[frameIndex].blob) {
+                const oldVideo = document.getElementById(`frame-video-${frameIndex}`);
+                if (oldVideo.src && oldVideo.src.startsWith('blob:')) {
+                    URL.revokeObjectURL(oldVideo.src);
+                }
+            }
+
             this.frames[frameIndex].blob = blob;
             this.updateFrameUI(frameIndex);
             this.recordingFrameIndex = null;
